@@ -31,15 +31,15 @@
       margin-top: 20px;
       font-size: 20px;
       color: #333;
-    }
-    #originalText {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #777;
-      font-style: italic;
+      text-align: left;
+      line-height: 1.5;
     }
     .positive {
       color: green;
+    }
+    .original {
+      color: #777;
+      font-style: italic;
     }
   </style>
 </head>
@@ -47,14 +47,12 @@
   <div class="container">
     <h1>PosiTalk - Speech to Positive Text</h1>
     <button id="start">Start Speaking</button>
-    <p id="output">Your transformed text will appear here...</p>
-    <p id="originalText">Your original spoken text will appear here...</p>
+    <div id="output"></div>
   </div>
 
   <script>
     const startButton = document.getElementById('start');
     const output = document.getElementById('output');
-    const originalText = document.getElementById('originalText');
 
     // Dictionary for negative-to-positive word replacement
     const dictionary = {
@@ -76,16 +74,26 @@
 
     startButton.addEventListener('click', () => {
       recognition.start();
-      output.textContent = "Listening...";
-      originalText.textContent = "Listening for your words...";
+      output.innerHTML = "Listening...";
     });
 
     // Process Speech
     recognition.onresult = (event) => {
       const spokenWords = event.results[0][0].transcript;
-      originalText.textContent = `Original Text: ${spokenWords}`;
       const positiveText = transformToPositive(spokenWords);
-      output.innerHTML = positiveText;
+      
+      // Create new elements for original and transformed text
+      const originalTextElement = document.createElement('p');
+      originalTextElement.classList.add('original');
+      originalTextElement.textContent = `Original: ${spokenWords}`;
+      
+      const transformedTextElement = document.createElement('p');
+      transformedTextElement.classList.add('positive');
+      transformedTextElement.innerHTML = positiveText;
+      
+      // Prepend the new text to the output
+      output.prepend(transformedTextElement);
+      output.prepend(originalTextElement);
     };
 
     // Transform negative words to positive
