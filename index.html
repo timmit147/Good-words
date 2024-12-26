@@ -32,6 +32,12 @@
       font-size: 20px;
       color: #333;
     }
+    #originalText {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #777;
+      font-style: italic;
+    }
     .positive {
       color: green;
     }
@@ -41,12 +47,14 @@
   <div class="container">
     <h1>PosiTalk - Speech to Positive Text</h1>
     <button id="start">Start Speaking</button>
-    <p id="output">Your transcribed text will appear here...</p>
+    <p id="output">Your transformed text will appear here...</p>
+    <p id="originalText">Your original spoken text will appear here...</p>
   </div>
 
   <script>
     const startButton = document.getElementById('start');
     const output = document.getElementById('output');
+    const originalText = document.getElementById('originalText');
 
     // Dictionary for negative-to-positive word replacement
     const dictionary = {
@@ -69,11 +77,13 @@
     startButton.addEventListener('click', () => {
       recognition.start();
       output.textContent = "Listening...";
+      originalText.textContent = "Listening for your words...";
     });
 
     // Process Speech
     recognition.onresult = (event) => {
       const spokenWords = event.results[0][0].transcript;
+      originalText.textContent = `Original Text: ${spokenWords}`;
       const positiveText = transformToPositive(spokenWords);
       output.innerHTML = positiveText;
     };
