@@ -21,7 +21,7 @@
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background-color: #4CAF50;
+      background-color: #4CAF50; /* Green when ready to talk */
       color: white;
     }
     button:hover {
@@ -36,10 +36,6 @@
     }
     .positive {
       color: green;
-    }
-    .original {
-      color: #777;
-      font-style: italic;
     }
   </style>
 </head>
@@ -72,7 +68,9 @@
     recognition.lang = 'en-US';
     recognition.interimResults = false;
 
+    // When the button is clicked, start the speech recognition
     startButton.addEventListener('click', () => {
+      startButton.style.backgroundColor = '#2196F3'; // Blue when listening
       recognition.start();
       output.innerHTML = "Listening...";
     });
@@ -81,22 +79,20 @@
     recognition.onresult = (event) => {
       const spokenWords = event.results[0][0].transcript;
       const positiveText = transformToPositive(spokenWords);
-      
-      // Create new elements for original and transformed text
-      const originalTextElement = document.createElement('p');
-      originalTextElement.classList.add('original');
-      originalTextElement.textContent = `Original: ${spokenWords}`;
-      
+
+      // Create a new element for the transformed positive text
       const transformedTextElement = document.createElement('p');
       transformedTextElement.classList.add('positive');
       transformedTextElement.innerHTML = positiveText;
-      
+
       // Prepend the new text to the output
       output.prepend(transformedTextElement);
-      output.prepend(originalTextElement);
+
+      // Reset the button color after speaking is done
+      startButton.style.backgroundColor = '#4CAF50'; // Green when idle
     };
 
-    // Transform negative words to positive
+    // Transform negative words to positive and highlight them
     function transformToPositive(text) {
       const words = text.split(" ");
       const transformedWords = words.map(word => {
@@ -108,6 +104,11 @@
 
     recognition.onerror = (event) => {
       output.textContent = "Error occurred: " + event.error;
+      startButton.style.backgroundColor = '#4CAF50'; // Green on error
+    };
+
+    recognition.onend = () => {
+      startButton.style.backgroundColor = '#4CAF50'; // Green when speech recognition ends
     };
   </script>
 </body>
