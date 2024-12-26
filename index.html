@@ -10,7 +10,6 @@
       text-align: center;
       margin: 0;
       padding: 20px;
-      position: relative;
     }
     .container {
       max-width: 500px;
@@ -40,6 +39,7 @@
     .positive {
       color: green;
     }
+
     #graph-icon {
       position: fixed;
       top: 20px;
@@ -48,19 +48,7 @@
       font-size: 30px;
       color: #333;
     }
-    #fullscreen-popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      text-align: center;
-      padding-top: 50px;
-      z-index: 9999;
-    }
+
     #fullscreen-popup .content {
       background-color: #333;
       padding: 20px;
@@ -68,7 +56,8 @@
       max-width: 80%;
       margin: auto;
     }
-    #close-popup {
+
+#close-popup {
       margin-top: 20px;
       padding: 10px 20px;
       background-color: #FF5733;
@@ -80,14 +69,15 @@
     #close-popup:hover {
       background-color: #c7371f;
     }
+
+    
   </style>
 </head>
 <body>
-  <div id="graph-icon">
+  <div class="container">
+    <div id="graph-icon">
     📊
   </div>
-
-  <div class="container">
     <h1>Good-words - Talk positive</h1>
     <button id="start">Start Speaking</button>
     <div id="output"></div>
@@ -104,194 +94,335 @@
   <script>
     const startButton = document.getElementById('start');
     const output = document.getElementById('output');
-    const graphIcon = document.getElementById('graph-icon');
+const graphIcon = document.getElementById('graph-icon');
     const fullscreenPopup = document.getElementById('fullscreen-popup');
     const closePopupButton = document.getElementById('close-popup');
 
     // Dictionary for negative-to-positive word replacement
     const dictionary = {
-      "can't": "can",
-      "isn't": "is",
-      "don't": "do",
-      "wasn't": "was",
-      "won't": "will",
-      "doesn't": "does",
-      "ain't": "is",
-      "never": "always",
-      "nothing": "something",
-      "no": "yes",
-      "not": " ",
-      "tired": "energized",
-      "ugly": "beautiful",
-      "stupid": "intelligent",
-      "bad": "good",
-      "sad": "happy",
-      "hate": "love",
-      "impossible": "possible",
-      "weak": "strong",
-      "failure": "success",
-      "angry": "calm",
-      "bored": "excited",
-      "depressed": "uplifted",
-      "lazy": "motivated",
-      "no": "yes",
-      "unlucky": "lucky",
-      "alone": "connected",
-      "scared": "brave",
-      "worthless": "valuable",
-      "afraid": "confident",
-      "hopeless": "hopeful",
-      "disappointed": "grateful",
-      "unhappy": "joyful",
-      "mess": "order",
-      "regret": "pride",
-      "fail": "achieve",
-      "lost": "found",
-      "weakness": "strength",
-      "fat": "fit",
-      "unfocused": "focused",
-      "clumsy": "graceful",
-      "broken": "whole",
-      "poor": "rich",
-      "defeat": "victory",
-      "dark": "bright",
-      "stressed": "relaxed",
-      "confused": "clear",
-      "imperfect": "perfect",
-      "worst": "best",
-      "doubt": "certainty",
-      "sadness": "happiness",
-      "worthless": "worthy",
-      "ugliness": "beauty",
-      "unwanted": "desired",
-      "unnecessary": "necessary",
-      "mistake": "lesson",
-      "loser": "winner",
-      "slow": "fast",
-      "foolish": "wise",
-      "unproductive": "productive",
-      "unqualified": "qualified",
-      "unfit": "fit",
-      "noisy": "quiet",
-      "disgusted": "pleased",
-      "guilty": "innocent",
-      "nervous": "calm",
-      "unorganized": "organized",
-      "overwhelmed": "in control",
-      "stubborn": "flexible",
-      "insecure": "confident",
-      "shy": "outgoing",
-      "dull": "bright",
-      "untrustworthy": "trustworthy",
-      "immature": "mature",
-      "irritable": "patient",
-      "sick": "healthy",
-      "unhappy": "joyful",
-      "conflicted": "settled",
-      "defenseless": "protected",
-      "gloomy": "cheerful",
-      "unreliable": "reliable",
-      "unfriendly": "friendly",
-      "negative": "positive",
-      "unhelpful": "helpful",
-      "unlovable": "lovable",
-      "unwanted": "wanted",
-      "unattractive": "attractive",
-      "lousy": "great",
-      "tiring": "refreshing",
-      "uncomfortable": "comfortable",
-      "unpredictable": "predictable",
-      "incomplete": "complete",
-      "unreasonable": "reasonable",
-      "imperfect": "flawless",
-      "unfair": "fair",
-      "insensitive": "sensitive",
-      "disorganized": "organized",
-      "messy": "neat",
-      "irresponsible": "responsible",
-      "selfish": "selfless",
-      "ugly": "pretty",
-      "ungrateful": "grateful",
-      "sad": "joyful",
-      "doubtful": "certain",
-      "disappointed": "pleased",
-      "mean": "kind",
-      "uncooperative": "cooperative",
-      "disconnected": "connected",
-      "unfocused": "focused",
-      "resentful": "forgiving",
-      "apathetic": "enthusiastic",
-      "desperate": "hopeful",
-      "hopeless": "optimistic",
-      "annoyed": "calm",
-      "incompetent": "competent",
-      "tiring": "energizing",
-      "irritable": "pleasant",
-      "inconsiderate": "considerate",
-      "unappreciative": "appreciative",
-      "irregular": "consistent",
-      "miserable": "content",
-      "unwanted": "desired",
-      "ungrateful": "thankful",
-      "stressed": "relaxed",
-      "abandoned": "supported",
-      "defeated": "victorious",
-      "unhealthy": "healthy",
-      "unprepared": "prepared",
-      "anxious": "calm",
-      "worried": "confident",
-      "untrustworthy": "trustworthy",
-      "disappointed": "hopeful",
-      "unmotivated": "motivated",
-      "dull": "vibrant",
-      "unfocused": "sharp",
-      "shy": "bold",
-      "unresolved": "resolved",
-      "unbalanced": "balanced",
-      "apathetic": "engaged",
-      "unsuccessful": "successful",
-      "undisciplined": "disciplined",
-      "unattentive": "attentive",
-      "unpredictable": "predictable",
-      "submissive": "assertive",
-      "unimaginative": "creative",
-      "unaccomplished": "accomplished",
-      "uncoordinated": "coordinated",
-      "unskilled": "skilled",
-      "untidy": "tidy",
-      "unobservant": "observant",
-      "untalented": "talented",
-      "uncertain": "certain",
-      "undecided": "decided",
-      "unqualified": "qualified",
-      "unrefined": "refined",
-      "ungrateful": "thankful",
-      "unfit": "fit",
-      "unfocused": "focused",
-      "unreliable": "reliable",
-      "difficult": "easy",
-      "unresolved": "resolved",
-      "uncomfortable": "comfortable",
-      "weak": "strong",
-      "underprepared": "prepared",
-      "unlucky": "lucky"
-    };
+ "can't": "can",
+  "isn't": "is",
+  "don't": "do",
+  "wasn't": "was",
+  "won't": "will",
+  "doesn't": "does",
+  "ain't": "is",
+  "never": "always",
+  "nothing": "something",
+  "no": "yes",
+  "not": " ",
+  "won't": "will",
+  "couldn't": "could",
+  "shouldn't": "should",
+  "wouldn't": "would",
+  "aren't": "are",
+  "can't": "can",
+  "didn't": "did",
+  "isn't": "is",
+  "wasn't": "was",
+  "hasn't": "has",
+  "haven't": "have",
+  "doesn't": "does",
+  "didn't": "did",
+  "wasn't": "was",
+  "weren't": "were",
+  "couldn't": "could",
+  "shouldn't": "should",
+  "wouldn't": "would",
+  "ain't": "is",
+  "can't": "can",
+  "won't": "will",
+  "never": "always",
+  "nothing": "something",
+  "tired": "energized",
+  "can't": "can",
+  "ugly": "beautiful",
+  "stupid": "intelligent",
+  "bad": "good",
+  "sad": "happy",
+  "hate": "love",
+  "impossible": "possible",
+  "weak": "strong",
+  "failure": "success",
+  "angry": "calm",
+  "bored": "excited",
+  "depressed": "uplifted",
+  "lazy": "motivated",
+  "no": "yes",
+  "unlucky": "lucky",
+  "alone": "connected",
+  "scared": "brave",
+  "worthless": "valuable",
+  "afraid": "confident",
+  "hopeless": "hopeful",
+  "disappointed": "grateful",
+  "unhappy": "joyful",
+  "mess": "order",
+  "regret": "pride",
+  "fail": "achieve",
+  "lost": "found",
+  "weakness": "strength",
+  "fat": "fit",
+  "unfocused": "focused",
+  "clumsy": "graceful",
+  "broken": "whole",
+  "poor": "rich",
+  "defeat": "victory",
+  "dark": "bright",
+  "stressed": "relaxed",
+  "confused": "clear",
+  "imperfect": "perfect",
+  "worst": "best",
+  "doubt": "certainty",
+  "sadness": "happiness",
+  "worthless": "worthy",
+  "ugliness": "beauty",
+  "unwanted": "desired",
+  "unnecessary": "necessary",
+  "mistake": "lesson",
+  "loser": "winner",
+  "slow": "fast",
+  "foolish": "wise",
+  "unproductive": "productive",
+  "unqualified": "qualified",
+  "unfit": "fit",
+  "noisy": "quiet",
+  "disgusted": "pleased",
+  "guilty": "innocent",
+  "nervous": "calm",
+  "unorganized": "organized",
+  "overwhelmed": "in control",
+  "stubborn": "flexible",
+  "insecure": "confident",
+  "shy": "outgoing",
+  "dull": "bright",
+  "untrustworthy": "trustworthy",
+  "immature": "mature",
+  "irritable": "patient",
+  "sick": "healthy",
+  "unhappy": "joyful",
+  "conflicted": "settled",
+  "defenseless": "protected",
+  "gloomy": "cheerful",
+  "unreliable": "reliable",
+  "unfriendly": "friendly",
+  "negative": "positive",
+  "unhelpful": "helpful",
+  "unlovable": "lovable",
+  "unwanted": "wanted",
+  "unattractive": "attractive",
+  "lousy": "great",
+  "tiring": "refreshing",
+  "uncomfortable": "comfortable",
+  "unpredictable": "predictable",
+  "incomplete": "complete",
+  "unreasonable": "reasonable",
+  "imperfect": "flawless",
+  "unfair": "fair",
+  "insensitive": "sensitive",
+  "disorganized": "organized",
+  "messy": "neat",
+  "irresponsible": "responsible",
+  "selfish": "selfless",
+  "ugly": "pretty",
+  "ungrateful": "grateful",
+  "sad": "joyful",
+  "doubtful": "certain",
+  "disappointed": "pleased",
+  "mean": "kind",
+  "uncooperative": "cooperative",
+  "disconnected": "connected",
+  "unfocused": "focused",
+  "resentful": "forgiving",
+  "apathetic": "enthusiastic",
+  "desperate": "hopeful",
+  "hopeless": "optimistic",
+  "annoyed": "calm",
+  "incompetent": "competent",
+  "tiring": "energizing",
+  "irritable": "pleasant",
+  "inconsiderate": "considerate",
+  "unappreciative": "appreciative",
+  "irregular": "consistent",
+  "miserable": "content",
+  "unwanted": "desired",
+  "ungrateful": "thankful",
+  "stressed": "relaxed",
+  "abandoned": "supported",
+  "defeated": "victorious",
+  "unhealthy": "healthy",
+  "unprepared": "prepared",
+  "anxious": "calm",
+  "worried": "confident",
+  "untrustworthy": "trustworthy",
+  "disappointed": "hopeful",
+  "unmotivated": "motivated",
+  "dull": "vibrant",
+  "unfocused": "sharp",
+  "shy": "bold",
+  "unresolved": "resolved",
+  "unbalanced": "balanced",
+  "apathetic": "engaged",
+  "unsuccessful": "successful",
+  "undisciplined": "disciplined",
+  "unattentive": "attentive",
+  "unpredictable": "predictable",
+  "submissive": "assertive",
+  "unimaginative": "creative",
+  "unaccomplished": "accomplished",
+  "uncoordinated": "coordinated",
+  "unskilled": "skilled",
+  "untidy": "tidy",
+  "unobservant": "observant",
+  "untalented": "talented",
+  "uncertain": "certain",
+  "unproductive": "productive",
+  "unambitious": "ambitious",
+  "weak": "powerful",
+  "unconfident": "confident",
+  "illogical": "logical",
+  "unreliable": "reliable",
+  "timid": "courageous",
+  "uncaring": "caring",
+  "ungracious": "gracious",
+  "unadventurous": "adventurous",
+  "unrealistic": "realistic",
+  "insensitive": "empathetic",
+  "shameful": "proud",
+  "unrefined": "refined",
+  "indifferent": "interested",
+  "unsure": "certain",
+  "uncool": "cool",
+  "unattractive": "charming",
+  "unfulfilled": "fulfilled",
+  "unlucky": "lucky",
+  "unreliable": "dependable",
+  "unfocused": "focused",
+  "inconsistent": "consistent",
+  "unprepared": "prepared",
+  "incompetent": "competent",
+  "irrational": "rational",
+  "insecure": "secure",
+  "confused": "clear",
+  "undisciplined": "disciplined",
+  "undetermined": "determined",
+  "unfriendly": "friendly",
+  "displeased": "pleased",
+  "unsuccessful": "successful",
+  "overwhelmed": "calm",
+  "invisible": "visible",
+  "untamed": "tamed",
+  "chaotic": "orderly",
+  "reckless": "careful",
+  "unorganized": "organized",
+  "irresponsible": "responsible",
+  "ungrateful": "thankful",
+  "untrustworthy": "trustworthy",
+  "unproductive": "productive",
+  "unfocused": "focused",
+  "horrible": "amazing",
+  "unfair": "fair",
+  "unstable": "stable",
+  "incompetent": "competent",
+  "unaware": "aware",
+  "insensitive": "sensitive",
+  "unwilling": "willing",
+  "fearful": "brave",
+  "lost": "found",
+  "dark": "bright",
+  "disconnected": "connected",
+  "hopeless": "hopeful",
+  "stubborn": "flexible",
+  "rejected": "accepted",
+  "misunderstood": "understood",
+  "defenseless": "protected",
+  "unimaginative": "creative",
+  "weak": "strong",
+  "unworthy": "worthy",
+  "hurt": "healed",
+  "incomplete": "complete"
+};
 
-    // Function to handle the speech input
-    function handleSpeechInput() {
-      const outputText = output.innerHTML;
-      const words = outputText.split(' ');
-      const updatedWords = words.map(word => dictionary[word.toLowerCase()] || word);
-      const updatedText = updatedWords.join(' ');
-      output.innerHTML = updatedText;
-    }
 
-    // Event listener for the start button
-    startButton.addEventListener('click', function() {
-      output.innerHTML = 'You can start speaking now...';
+    // Initialize Speech Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    // Configure Recognition
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    // When the button is clicked, start the speech recognition
+    startButton.addEventListener('click', () => {
+      startButton.style.backgroundColor = '#2196F3'; // Blue when listening
+      recognition.start();
     });
 
-    // Open the popup when the graph icon is clicked
+    // Process Speech
+    recognition.onresult = (event) => {
+      const spokenWords = event.results[0][0].transcript;
+      const positiveText = transformToPositive(spokenWords);
+
+      // Add the new transformed positive text above the previous text
+      const updatedText = positiveText + "<br>" + getTextFromCookies();
+      output.innerHTML = updatedText;
+      
+      // Save the new text to cookies
+      saveTextToCookies(updatedText);
+
+      // Reset the button color after speaking is done
+      startButton.style.backgroundColor = '#4CAF50'; // Green when idle
+    };
+
+    // Transform negative words to positive and highlight them
+    function transformToPositive(text) {
+      const words = text.split(" ");
+      const transformedWords = words.map(word => {
+        const lowerWord = word.toLowerCase();
+        // Only change the word if it's in the dictionary
+        if (dictionary[lowerWord]) {
+          // Wrap the transformed word in a span with the 'positive' class
+          return `<span class="positive">${dictionary[lowerWord]}</span>`;
+        }
+        return word; // If no transformation, keep the word unchanged
+      });
+      return transformedWords.join(" ");
+    }
+
+    // Save text to cookies
+    function saveTextToCookies(text) {
+      document.cookie = "spokenText=" + encodeURIComponent(text) + "; path=/; max-age=86400"; // 1 day
+    }
+
+    // Get the text from cookies
+    function getTextFromCookies() {
+      const cookieArr = document.cookie.split("; ");
+      for (let i = 0; i < cookieArr.length; i++) {
+        const cookie = cookieArr[i].split("=");
+        if (cookie[0] === "spokenText") {
+          return decodeURIComponent(cookie[1]);
+        }
+      }
+      return ""; // Return empty if no text in cookies
+    }
+
+    recognition.onerror = (event) => {
+      output.textContent = "Error occurred: " + event.error;
+      startButton.style.backgroundColor = '#4CAF50'; // Green on error
+    };
+
+    recognition.onend = () => {
+      startButton.style.backgroundColor = '#4CAF50'; // Green when speech recognition ends
+    };
+
+    // Load previous text from cookies when the page loads
+    window.onload = () => {
+      const previousText = getTextFromCookies();
+      if (previousText) {
+        output.innerHTML = previousText;
+      }
+    };
+
     graphIcon.addEventListener('click', function() {
       fullscreenPopup.style.display = 'flex';
     });
@@ -303,4 +434,3 @@
   </script>
 </body>
 </html>
-
