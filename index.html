@@ -100,6 +100,8 @@
     <div class="content">
       <h2>Positive graph</h2>
       <p>This is a graph that shows your positifity</p>
+      <p class="positive-count">8</p>
+        <p class="negative-count">9</p>
       <button id="close-popup">Close</button>
     </div>
   </div>
@@ -386,6 +388,12 @@ const graphIcon = document.getElementById('graph-icon');
       // Reset the button color after speaking is done
       startButton.style.backgroundColor = '#4CAF50'; // Green when idle
     };
+
+var positiveCount = 1;
+var negativeCount = 2;
+
+document.querySelector('.positive-count').textContent = positiveCount;
+document.querySelector('.negative-count').textContent = negativeCount;
 
     // Transform negative words to positive and highlight them
     function transformToPositive(text) {
