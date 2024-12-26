@@ -80,12 +80,8 @@
       const spokenWords = event.results[0][0].transcript;
       const positiveText = transformToPositive(spokenWords);
 
-      // Create a new element for the transformed positive text
-      const transformedTextElement = document.createElement('p');
-      transformedTextElement.innerHTML = positiveText;
-
-      // Add the new text above the previous text
-      output.prepend(transformedTextElement);
+      // Add the new transformed positive text above the previous text
+      output.innerHTML = positiveText + "<br>" + output.innerHTML;
 
       // Reset the button color after speaking is done
       startButton.style.backgroundColor = '#4CAF50'; // Green when idle
