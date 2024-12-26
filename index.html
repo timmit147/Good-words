@@ -33,6 +33,8 @@
       color: #333;
       text-align: left;
       line-height: 1.5;
+      max-height: 400px;
+      overflow-y: auto;
     }
     .positive {
       color: green;
@@ -41,7 +43,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>PosiTalk - Speech to Positive Text</h1>
+    <h1>Good-words - Talk positive</h1>
     <button id="start">Start Speaking</button>
     <div id="output"></div>
   </div>
@@ -72,7 +74,6 @@
     startButton.addEventListener('click', () => {
       startButton.style.backgroundColor = '#2196F3'; // Blue when listening
       recognition.start();
-      output.innerHTML = "Listening...";
     });
 
     // Process Speech
@@ -81,7 +82,11 @@
       const positiveText = transformToPositive(spokenWords);
 
       // Add the new transformed positive text above the previous text
-      output.innerHTML = positiveText + "<br>" + output.innerHTML;
+      const updatedText = positiveText + "<br>" + getTextFromCookies();
+      output.innerHTML = updatedText;
+      
+      // Save the new text to cookies
+      saveTextToCookies(updatedText);
 
       // Reset the button color after speaking is done
       startButton.style.backgroundColor = '#4CAF50'; // Green when idle
@@ -102,6 +107,23 @@
       return transformedWords.join(" ");
     }
 
+    // Save text to cookies
+    function saveTextToCookies(text) {
+      document.cookie = "spokenText=" + encodeURIComponent(text) + "; path=/; max-age=86400"; // 1 day
+    }
+
+    // Get the text from cookies
+    function getTextFromCookies() {
+      const cookieArr = document.cookie.split("; ");
+      for (let i = 0; i < cookieArr.length; i++) {
+        const cookie = cookieArr[i].split("=");
+        if (cookie[0] === "spokenText") {
+          return decodeURIComponent(cookie[1]);
+        }
+      }
+      return ""; // Return empty if no text in cookies
+    }
+
     recognition.onerror = (event) => {
       output.textContent = "Error occurred: " + event.error;
       startButton.style.backgroundColor = '#4CAF50'; // Green on error
@@ -109,6 +131,14 @@
 
     recognition.onend = () => {
       startButton.style.backgroundColor = '#4CAF50'; // Green when speech recognition ends
+    };
+
+    // Load previous text from cookies when the page loads
+    window.onload = () => {
+      const previousText = getTextFromCookies();
+      if (previousText) {
+        output.innerHTML = previousText;
+      }
     };
   </script>
 </body>
