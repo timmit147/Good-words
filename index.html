@@ -85,7 +85,7 @@
       transformedTextElement.classList.add('positive');
       transformedTextElement.innerHTML = positiveText;
 
-      // Prepend the new text to the output
+      // Add the new text above the previous text
       output.prepend(transformedTextElement);
 
       // Reset the button color after speaking is done
@@ -97,7 +97,12 @@
       const words = text.split(" ");
       const transformedWords = words.map(word => {
         const lowerWord = word.toLowerCase();
-        return dictionary[lowerWord] ? `<span class="positive">${dictionary[lowerWord]}</span>` : word;
+        // Only change the word if it's in the dictionary
+        if (dictionary[lowerWord]) {
+          // Wrap the transformed word in a span with the 'positive' class
+          return `<span class="positive">${dictionary[lowerWord]}</span>`;
+        }
+        return word; // If no transformation, keep the word unchanged
       });
       return transformedWords.join(" ");
     }
